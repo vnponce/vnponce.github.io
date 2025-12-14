@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abel Ponce — Backend Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-card: #18181b;
+            --accent: #22c55e;
+            --accent-dim: #16a34a;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .title span {
+            color: var(--accent);
+        }
+
+        /* Bio */
+        .bio {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin: 2rem 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+        }
+
+        /* Links */
+        .links {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .links a:hover {
+            color: var(--accent);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Project Cards */
+        .project {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .project:hover {
+            border-color: var(--accent-dim);
+            transform: translateY(-2px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .project-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            background: rgba(34, 197, 94, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-stack {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .project-stack span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: color 0.2s;
+        }
+
+        .project-link:hover {
+            color: var(--accent);
+        }
+
+        .project-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 500px) {
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .skill-category {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .skill-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-items {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .cta {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .cta:hover {
+            background: var(--accent-dim);
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="status">Open to opportunities</div>
+            <h1 class="name">Abel Ponce</h1>
+            <p class="title">Backend Engineer <span>@ Amazon</span></p>
+        </header>
+
+        <p class="bio">
+            8+ years building backend systems. Currently at AWS (Amazon Connect), 
+            exploring AI agent development with Bedrock and Lambda. 
+            Background in logistics and e-commerce. TDD advocate.
+        </p>
+
+        <nav class="links">
+            <a href="mailto:vnponce8@gmail.com">vnponce8@gmail.com</a>
+            <a href="https://github.com/vnponce" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/vnponce" target="_blank">LinkedIn</a>
+        </nav>
+
+        <section class="section">
+            <h2 class="section-title">AI Projects</h2>
+            
+            <article class="project">
+                <div class="project-header">
+                    <h3 class="project-name">Football Intelligence Agent</h3>
+                    <span class="project-tag">2025</span>
+                </div>
+                <p class="project-desc">
+                    AI-powered serverless agent that answers football questions using Claude AI. 
+                    Exploring AI agent patterns and prompt engineering.
+                </p>
+                <div class="project-stack">
+                    <span>AWS Lambda</span>
+                    <span>Bedrock</span>
+                    <span>Claude</span>
+                    <span>Python</span>
+                </div>
+                <a href="https://github.com/vnponce/football-intelligence-agent" target="_blank" class="project-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    View on GitHub
+                </a>
+            </article>
+
+            <article class="project">
+                <div class="project-header">
+                    <h3 class="project-name">Mundial Ticket Agent</h3>
+                    <span class="project-tag">2025</span>
+                </div>
+                <p class="project-desc">
+                    Virtual assistant for World Cup ticket registrations. 
+                    Self-directed learning project integrating AWS Bedrock with Lambda.
+                </p>
+                <div class="project-stack">
+                    <span>AWS Lambda</span>
+                    <span>Bedrock</span>
+                    <span>Serverless</span>
+                </div>
+                <a href="https://github.com/vnponce/mundial-ticket-agent" target="_blank" class="project-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    View on GitHub
+                </a>
+            </article>
+
+            <article class="project">
+                <div class="project-header">
+                    <h3 class="project-name">RAG On-Call Playbook</h3>
+                    <span class="project-tag">Lovevery 2024</span>
+                </div>
+                <p class="project-desc">
+                    Retrieval-Augmented Generation tool to assist on-call engineers. 
+                    Retrieved troubleshooting steps from documentation automatically. 
+                    Attracted CTO interest as potential org-wide solution.
+                </p>
+                <div class="project-stack">
+                    <span>RAG</span>
+                    <span>Vector Search</span>
+                    <span>PostgreSQL</span>
+                </div>
+            </article>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <div class="skill-label">Languages</div>
+                    <div class="skill-items">TypeScript · Ruby · PHP · Python</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Cloud (AWS)</div>
+                    <div class="skill-items">CDK · Lambda · Bedrock · SQS</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Backend</div>
+                    <div class="skill-items">REST APIs · Rails · Laravel · FastAPI</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Testing</div>
+                    <div class="skill-items">TDD · RSpec · PHPUnit · Cypress</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Currently @ Amazon Web Services — Seattle, WA</p>
+            <a href="mailto:vnponce8@gmail.com" class="cta">Get in touch</a>
+        </footer>
+    </div>
+</body>
+</html>
